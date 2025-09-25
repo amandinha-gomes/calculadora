@@ -1,0 +1,114 @@
+.perfil-section{
+    display: flex;
+}
+
+.perfil-section h2{
+    margin-left: 5vw;
+    margin-top: 8vw;
+}
+
+.section-perfil {
+    margin-top: 10vw;
+    margin-left: -4vw;
+}
+
+.row-perfil{
+    display: flex;
+}
+
+.row-perfil input{
+    width: 35vw;
+}
+
+.row2-perfil{
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+.row2-perfil input{
+    width: 35vw;
+}
+
+.salvar-perfil input{
+    width: 35vw;
+}
+
+input:focus{
+    border: 0.01px solid transparent;
+    background-image: linear-gradient(#fff, #fff),
+                      linear-gradient(120deg, #b91010, #ff4d4d, #b91010);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 0 2px rgba(185, 16, 16, 0.7);
+    transition: all 0.2s ease-in-out;
+}
+
+.salvar-btn-materia {
+    width: 20.5vw;
+    background-color: #b91010;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    padding-left: 37%;
+    transition: 0.2s;
+    display: flex;
+    margin-top: 10px;
+    width: 36.5vw;
+}
+
+.salvar-btn-materia:hover{
+    background-color: #900000;
+}
+
+.side-perfil{
+    flex: 1;
+    background: #170203;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    margin-left: 48vw;
+    margin-top: -37vw;
+    overflow: hidden;
+    height: 43vw;
+    width: 46.8vw;
+}
+
+.btn-salvar {
+    flex: 1;
+    background-color: #10B981; 
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.btn-salvar:hover {
+    background-color: #1e7e34;
+}
+
+.btn-voltar {
+    flex: 1;
+    background-color: #b91010;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.btn-voltar:hover {
+    background-color: #900000;
+}

@@ -1,0 +1,420 @@
+/* .loginPage * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.loginPage {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Jost', sans-serif;
+    background: linear-gradient(120deg, #BB1217, #000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    width: 60%;
+    max-width: 1200px;
+    height: 90%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+    width: 50%;
+    margin-top: 30%;
+    margin-left: 20%;
+    height: 70%;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.calculatorIcon {
+    animation: float 2s ease-in-out infinite;
+}
+
+.leftPanel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    background: linear-gradient(135deg, #000, #BB1217, #000);
+    padding: 40px;
+    color: black;
+    text-align: left;
+    height: 100%;
+    width: 100%;
+}
+
+.brand {
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 30%;
+    color: #fff;
+}
+
+.invite {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.subtext {
+    margin-top: 3%;
+    font-size: 15px;
+    text-align: center;
+    color: #fff;
+}
+
+.rightPanel {
+    flex: 1;
+    background: rgb(255, 255, 255, 0.10);
+    backdrop-filter: blur(25px);
+}
+
+.loginForm {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title {
+    font-size: 26px;
+    margin-bottom: 65px;
+    color: #fff;
+    text-align: center;
+}
+
+
+.formLabel {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.formInput {
+    width: 100%;
+    max-width: 350px;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 14px;
+}
+
+.formInput::placeholder {
+    color: rgba(255, 255, 255, 1);
+}
+
+.showPassword {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    max-width: 350px;
+    margin-top: -15px;
+    margin-bottom: 30px;
+}
+
+.showPassword label {
+    font-size: 14px;
+    color: #fff;
+    order: 2;
+}
+
+.showPassword input {
+    margin-right: 10px;
+    order: 1;
+}
+
+.btn {
+    width: 100%;
+    max-width: 350px;
+    background: rgba(16, 185, 129, 0.8);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: rgba(5, 150, 105, 0.9);
+}
+
+.divider {
+    margin: 15px 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.btnOutline {
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid rgba(255, 255, 255, 0.648);
+    background-color: rgba(255, 255, 255, 0.403);
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btnOutline:hover {
+    background-color: rgba(255, 255, 255, 0.234);
+} */
+
+.loginPage * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.loginPage {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    font-family: 'Jost', sans-serif;
+    background: linear-gradient(120deg, #BB1217, #000);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.container {
+    display: flex;
+    width: 60%;
+    max-width: 1200px;
+    height: 90%;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+.logo img {
+    width: 50%;
+    margin-top: 30%;
+    margin-left: 20%;
+    height: 70%;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.calculatorIcon {
+    animation: float 2s ease-in-out infinite;
+}
+
+.leftPanel {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlay {
+    background: linear-gradient(135deg, #000, #BB1217, #000);
+    padding: 40px;
+    color: black;
+    text-align: left;
+    height: 100%;
+    width: 100%;
+}
+
+.brand {
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+    margin-top: 30%;
+    color: #fff;
+}
+
+.invite {
+    font-size: 20px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.subtext {
+    margin-top: 3%;
+    font-size: 15px;
+    text-align: center;
+    color: #fff;
+}
+
+.rightPanel {
+    flex: 1;
+    background: rgb(255, 255, 255, 0.10);
+    backdrop-filter: blur(25px);
+}
+
+.loginForm {
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* CLASSE ADICIONADA */
+.title {
+    font-size: 26px;
+    margin-bottom: 55px;
+    color: #fff;
+    text-align: center;
+    margin-left: -300px;
+}
+
+/* CLASSE ADICIONADA */
+.formLabel {
+    display: block;
+    width: 100%;
+    max-width: 350px;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #fff;
+}
+
+/* CLASSE ADICIONADA */
+.formInput {
+    width: 100%;
+    max-width: 350px;
+    padding: 12px;
+    margin-bottom: 20px;
+    /* Espaçamento entre os inputs */
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: #000000;
+    font-size: 14px;
+}
+
+.formInput::placeholder {
+    color: rgba(255, 255, 255, 0.1);
+}
+
+.showPassword {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 190%;
+    max-width: 450px;
+    margin-top: -15px;
+    margin-bottom: 30px;
+}
+
+.showPassword label {
+    font-size: 14px;
+    margin-right: 17vw;
+    display: flex;
+    width: 700%;
+    color: #fff;
+    order: 2;
+}
+
+.showPassword input {
+    margin-left: 3vw;
+    order: 1;
+}
+
+.btn {
+    width: 100%;
+    max-width: 350px;
+    background: rgba(16, 185, 129, 0.8);
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn:hover {
+    background: rgba(5, 150, 105, 0.9);
+}
+
+.divider {
+    margin: 15px 0;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 14px;
+}
+
+.btnOutline {
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid rgba(255, 255, 255, 0.648);
+    background-color: rgba(255, 255, 255, 0.403);
+    padding: 12px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 500;
+    color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btnOutline:hover {
+    background-color: rgba(255, 255, 255, 0.234);
+}

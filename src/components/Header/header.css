@@ -1,0 +1,22 @@
+.header-container {
+  /* height: 50px; */
+  display: flex;
+  background-color: #1a202c00;
+}
+
+.header-container > svg {
+  position: fixed;
+  color: black;
+  width: 30px;
+  height: 30px;
+  margin-top: 32px;
+  margin-left: 32px;
+  cursor: pointer;
+}
+
+.red-header {
+  background-color: red; /* cor para cadastrar usuário */
+}
+
+
+

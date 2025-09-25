@@ -1,0 +1,220 @@
+.cadastro-container-materia {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+}
+
+.upload-section-materia h2{
+    margin-left: 5px;
+    margin-top: -20px;
+}
+
+.form-side-materia {
+    flex: 1;
+    background: #ffffff;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: -2vh;
+    /* margin-left: 2vw; */
+}
+
+.upload-section-materia {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin: auto;
+    margin-top: 4vw;
+    margin-left: 1vw;
+}
+
+.materia{
+    width: 40vw;
+}
+
+.materia-prima2{
+    width: 21vh;
+}
+
+.manual-section-materia h2{
+    margin-left: 4vw;
+    margin-top: -50vh;
+    margin-bottom: -5px ;
+    /* margin: auto; */
+}
+
+.input-small {
+    flex: 1;
+    width: 5%;
+}
+
+.upload-btn-materia {
+    background-color: #b91010;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    align-items: center;
+    width: 41.3vw;
+    transition: 0.2s;
+    display: flex;
+    margin-top: 10px;
+    padding-left: 40%;
+}
+
+.upload-btn-materia:hover,
+.salvar-materia:hover {
+    background-color: #900000;
+}
+
+.salvar-materia{
+    background-color: #b91010;
+    color: #fff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    align-items: center;
+    padding-left: 40%;
+    width: 40.7vw;
+    transition: 0.2s;
+    display: flex;
+    margin-top: 10px;
+    margin-left: -10vh;
+}
+
+.manual-section-materia{
+    margin: auto;
+    margin-top: 20vw;
+    margin-left: -2vw;
+}
+
+.info-side-materia {
+    flex: 1;
+    background: #170203;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    /* margin-top: -10vw; */
+}
+
+.upload-img {
+    width: 180px;
+    margin-top: 20px;
+}
+
+.row-materia{
+    display: flex;
+    gap: 15px;
+    margin-left: 4vw;
+}
+
+input.materia-prima{
+    width: 15vw;
+}
+
+select.unidade-medida{
+    width: 10vw;
+}
+
+input.quatidade{
+    width: 15vw;
+}
+
+input.preco{
+    width: 10vw;
+}
+
+input:focus{
+    border: 0.01px solid transparent;
+    background-image: linear-gradient(#fff, #fff),
+                      linear-gradient(120deg, #b91010, #ff4d4d, #b91010);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 0 2px rgba(185, 16, 16, 0.7);
+    transition: all 0.2s ease-in-out;
+}
+
+.row2-materia{
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-left: 4vw;
+}
+
+.materia-prima2 input{
+    flex: 1; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    width: 27vh;
+}
+
+.salvar-materia{
+    margin-left: 4vw;
+}
+
+.salvar input{
+    margin-left: 4vw;
+    width: 39.3vw;
+}
+
+.salvar label{
+    margin-left: 4vw;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 25px;
+    font-weight: medium;
+}
+
+input, select {
+    width: 12.5vw;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+input.quantidade{
+    width: 23vh;
+}
+
+.upload-img img{
+    width: 10px;
+    height: 30px;
+    z-index: 2;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+.materia-img {
+    animation: float 2s ease-in-out infinite;
+}

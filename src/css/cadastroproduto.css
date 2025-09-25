@@ -1,0 +1,159 @@
+.form-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    margin-left: 30vw;
+    margin-top: -100px;
+}
+
+h2 {
+    margin-bottom: 2vw;
+    margin-left: 0vw;
+    margin-top: 150px;
+}
+
+label {
+    display: block;
+    margin-bottom: 6px;
+    margin-top: 25px;
+    font-weight: medium;
+}
+
+input, select {
+    width: 33.5vw;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus{
+    border: 0.01px solid transparent;
+    background-image: linear-gradient(#fff, #fff),
+                      linear-gradient(120deg, #b91010, #ff4d4d, #b91010);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 0 2px rgba(185, 16, 16, 0.7);
+    transition: all 0.2s ease-in-out;
+}
+
+.materia-prima {
+    flex: 1; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+}
+
+.row {
+    display: flex;
+    gap: 15px;
+    /* margin-top: 20px; */
+    align-items: flex-end; 
+}
+
+.materia-prima-produto{
+    max-width: 40vh;
+}
+
+.unidade-medida-produto {
+    max-width: 40vh;
+    margin-left: 1px;
+}
+
+.unidade-medida:hover{
+    background-color: rgba(172, 172, 172, 0.5);
+    cursor: pointer;
+}
+
+/* .quantidade {
+    max-width: 15vw;
+    margin-left: 1px;
+} */
+
+#quantidade-produto{
+    width: 12vw;
+}
+
+.add-btn {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 30%;
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: -10px;
+}
+
+.salvar-produto{
+    margin-top: 2vw;
+    width: 92%;
+    padding: 12px;
+    background: #b91010;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.salvar-produto:hover {
+    background-color: #991B1B;
+} 
+
+.success-container {
+    display: flex;
+    /* height: 11vh; */
+    /* width: 100vh; */
+    overflow: hidden;
+    align-items: center;
+    text-align: center;
+}
+
+.left {
+    flex: 1;
+    background-color: #170203; 
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    height: 100vh;
+    width: 150vh;
+    overflow: hidden;
+}
+
+.right {
+    flex: 1;
+    background-color: #ffffff;
+    color: black;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.cadastrar-btn {
+    margin-top: 20px;
+    background-color: #b91010;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 70%;
+}
+
+.salvar-btn:hover {
+    background-color: #900000;
+}
