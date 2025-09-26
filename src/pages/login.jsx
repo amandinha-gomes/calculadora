@@ -2,14 +2,33 @@ import React, { useState } from "react";
 import styles from "../css/login.module.css";
 import calculator from "../img/calculator.svg";
 import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (e) => {
+    const handleLogin = async (e) => {
         e.preventDefault();
-        navigate("/dashboard");
+
+        const email = document.getElementById("email").value;
+        const senha = document.getElementById("senha").value;
+
+        try {
+            const response = await api.post("/auth/login", { email, senha });
+
+            // Salva token no localStorage
+            localStorage.setItem("access_token", response.data.access_token);
+
+            // Salva dados do usuário
+            localStorage.setItem("usuario", JSON.stringify(response.data.usuario));
+
+            // Redireciona
+            navigate("/dashboard");
+        } catch (error) {
+            console.error(error);
+            alert(error.response?.data?.detail || "Erro ao fazer login");
+        }
     };
 
     return (
@@ -73,66 +92,8 @@ const Login = () => {
                         <button type="submit" className={styles.btn}>
                             Login →
                         </button>
-
-                        <div className={styles.divider}>ou</div>
-
-                        <button type="button" className={styles.btnOutline}>
-                            <img
-                                src="https://img.icons8.com/color/24/google-logo.png"
-                                alt="Google logo"
-                            />
-                            Continue com o Google
-                        </button>
                     </form>
                 </div>
-
-
-                {/* Lado Direito */}
-                {/* <div className={styles.rightPanel}>
-                    <form onSubmit={handleLogin}>
-                        <h2>Login</h2>
-
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            placeholder="Informe seu email"
-                            required
-                        />
-
-                        <label htmlFor="senha">Senha</label>
-                        <input
-                            type={showPassword ? "text" : "password"}
-                            id="senha"
-                            placeholder="••••••"
-                            required
-                        />
-
-                        <div className={styles.showPassword}>
-                            <input
-                                type="checkbox"
-                                id="show-password"
-                                checked={showPassword}
-                                onChange={() => setShowPassword(!showPassword)}
-                            />
-                            <label htmlFor="show-password">Mostrar senha</label>
-                        </div>
-
-                        <button type="submit" className={styles.btn}>
-                            Login →
-                        </button>
-
-                        <div className={styles.divider}>ou</div>
-
-                        <button type="button" className={styles.btnOutline}>
-                            <img
-                                src="https://img.icons8.com/color/24/google-logo.png"
-                                alt="Google logo"
-                            />
-                            Continue com o Google
-                        </button>
-                    </form>
-                </div> */}
             </div>
         </div>
     );

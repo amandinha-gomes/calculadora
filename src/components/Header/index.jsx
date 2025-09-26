@@ -11,7 +11,7 @@ const Header = () => {
   const showSidebar = () => setSidebar(!sidebar);
 
   // Não renderiza o Header na página de login
-  if (location.pathname === "/login") return null;
+  if (location.pathname === "/") return null;
 
   // Define a cor do ícone dependendo da rota
   const iconColor = location.pathname === "/cadastrouser" ? "red" : "black";

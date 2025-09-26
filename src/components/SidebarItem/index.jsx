@@ -1,16 +1,3 @@
-// import React from "react";
-// import "./sidebarItem.css";
-
-// const SidebarItem = ({ Text }) => {
-//   return (
-//     <div className="container">
-//       {Text}
-//     </div>
-//   );
-// };
-
-// export default SidebarItem;
-
 import { Link } from "react-router-dom";
 import "./sidebarItem.css";
 
