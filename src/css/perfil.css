@@ -1,3 +1,8 @@
+.perfil-page{
+    height: 100vh;       /* ou min-height: 100vh */
+    overflow: hidden;
+}
+
 .perfil-section{
     display: flex;
 }

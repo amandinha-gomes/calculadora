@@ -6,7 +6,6 @@ body {
     padding: 0;
     display: flex;
     box-sizing: border-box;
-    overflow: hidden;
 }
 
 .dashboard-wrapper {
@@ -313,6 +312,22 @@ body {
     background: #fafafa;
 }
 
+.modal-body table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.modal-body th,
+.modal-body td {
+  text-align: left; /* <-- garante alinhamento à esquerda */
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.modal-body th {
+  font-weight: bold;
+}
+
 .modal-body input:focus,
 .modal-body select:focus {
     border-color: #b91010;
@@ -337,6 +352,30 @@ body {
 .modal-body button:hover {
     background: #a00d0d;
 }
+
+.acoes-cell {
+  display: flex;
+  justify-content: center;
+}
+
+.btn-acao {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.btn-acao img {
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.btn-acao:hover img {
+  transform: scale(1.1);
+}
+
 
 @keyframes modalIn {
     from {

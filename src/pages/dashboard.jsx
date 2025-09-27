@@ -1,68 +1,73 @@
-// import React, { useState, useEffect } from "react";
 import React, { useState, useEffect } from "react";
+import api from "../services/api";
 import "../css/dashboard.css";
 import grafico from "../img/grafico.svg";
 import editar from "../img/editar.svg";
-import trash from "../img/trash.svg"
+import trash from "../img/trash.svg";
 
 const Dashboard = () => {
-    const [mostrarProdutos, setMostrarProdutos] = useState(false);
+    const [mostrarProdutos, setMostrarProdutos] = useState(true);
     const [mostrarMaterias, setMostrarMaterias] = useState(false);
 
-    // controle do modal
-    const [itemSelecionado, setItemSelecionado] = useState(null);
-    const [itemTipo, setItemTipo] = useState(null); // 'produto' ou 'materia'
+    const [produtos, setProdutos] = useState([]);
+    const [materias, setMaterias] = useState([]);
+    const [materiasDisponiveis, setMateriasDisponiveis] = useState([]);
+
+    const [itemSelecionado, setItemSelecionado] = useState(null); // item atual (produto ou matéria)
+
+    const [itemVisualizacao, setItemVisualizacao] = useState(null); // só para modal de visualização
+    const [itemParaExcluir, setItemParaExcluir] = useState(null); // só para modal de exclusão
     const [editando, setEditando] = useState(false);
 
-    // produtos (cada item tem id único)
-    const [produtos, setProdutos] = useState([
-        {
-            // id: "1",
-            nome: "MCM037",
-            codigo: "000604",
-            preco: 85.0,
-            estoque: 12,
-            ultimaAtualizacao: "16/07/2025",
-            materiaPrima: ["Tinta", "Solvente", "Verniz"],
-            quantidade: "2 Latas (10l)",
-            fornecedor: "Marquinhos"
-        },
-        {
-            // id: "2",
-            nome: "MCM010",
-            codigo: "000605",
-            preco: 55.0,
-            estoque: 8,
-            ultimaAtualizacao: "09/08/2025",
-            materiaPrima: "Aço",
-            quantidade: "5 Barras",
-            fornecedor: "Luquinhas"
-        },
-        {
-            // id: "3",
-            nome: "MCM033E-C",
-            codigo: "000606",
-            preco: 110.0,
-            estoque: 20,
-            ultimaAtualizacao: "23/04/2024",
-            materiaPrima: "Cobre",
-            quantidade: "3 Kg",
-            fornecedor: "Aninha"
+    const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
+
+
+    const [produtosImpactados, setProdutosImpactados] = useState(0);
+    const [itemTipo, setItemTipo] = useState(""); // "produto" ou "materia"
+
+    const fecharModalExcluir = () => setModalExcluirAberto(false);
+
+    // Buscar produtos ao abrir dashboard
+    useEffect(() => {
+        const fetchProdutos = async () => {
+            try {
+                const response = await api.get("/produto/listar");
+                setProdutos(response.data.produtos || []);
+            } catch (error) {
+                console.error("Erro ao buscar produtos:", error);
+                alert("Erro ao carregar produtos!");
+            }
+        };
+
+        const fetchMateriasDisponiveis = async () => {
+            try {
+                const response = await api.get("/materia/listar");
+                setMateriasDisponiveis(response.data.materias || []);
+            } catch (error) {
+                console.error("Erro ao buscar matérias:", error);
+            }
+        };
+
+        fetchProdutos();
+        fetchMateriasDisponiveis();
+    }, []);
+
+    // Buscar matérias-primas quando o usuário clicar no botão
+    const fetchMaterias = async () => {
+        try {
+            const response = await api.get("/materia/listar");
+            setMaterias(response.data.materias || []);
+        } catch (error) {
+            console.error("Erro ao buscar matérias:", error);
+            alert("Erro ao carregar matérias-primas!");
         }
-    ]);
+    };
 
-    // matérias-primas
-    const[materias, setMaterias] = useState([
-        { materia: "Tinta", codigo: "000604", custo: 85.0, fornecedor: "Marquinhos", data: "16/07/2025" },
-        { materia: "Aço", codigo: "000605", custo: 120.0, fornecedor: "Luquinhas", data: "09/08/2025" },
-        { materia: "Cobre", codigo: "000606", custo: 95.0, fornecedor: "Aninha", data: "23/04/2024" }
-    ]);
-
-    const abrirModal = (item, tipo) => {
+    const abrirModal = (item, tipo, modoEdicao = false) => {
         // console.log("abrirModal:", tipo, item);
         setItemSelecionado(item);
         setItemTipo(tipo);
-        setEditando(false);
+        setEditando(modoEdicao);
     };
 
     const fecharModal = () => {
@@ -71,24 +76,23 @@ const Dashboard = () => {
         setEditando(false);
     };
 
-    // editar item
-    const salvarEdicao = () => {
-        if (itemTipo === "produto") {
-            setProdutos(produtos.map(p => p.id === itemSelecionado.id ? itemSelecionado : p));
-        } else if (itemTipo === "materia") {
-            setMaterias(materias.map(m => m.codigo === itemSelecionado.codigo ? itemSelecionado : m));
-        }
-        setEditando(false);
-    };
+    const abrirModalExcluir = async (item, tipo) => {
+        setItemTipo(tipo);
+        setItemParaExcluir(item);
 
-    // deletar item
-    const deletarItem = () => {
-        if (itemTipo === "produto") {
-            setProdutos(produtos.filter(p => p.id !== itemSelecionado.id));
-        } else if (itemTipo === "materia") {
-            setMaterias(materias.filter(m => m.codigo !== itemSelecionado.codigo));
+        if (tipo === "materia") {
+            try {
+                const response = await api.get(`/materia/produtos-impactados/${item.id_materia}`);
+                setProdutosImpactados(response.data.produtosImpactados || 0);
+            } catch (error) {
+                console.error("Erro ao buscar produtos impactados:", error);
+                setProdutosImpactados(0);
+            }
+        } else {
+            setProdutosImpactados(0);
         }
-        fecharModal();
+
+        setModalExcluirAberto(true);
     };
 
     // fechar modal com ESC
@@ -100,11 +104,114 @@ const Dashboard = () => {
         return () => window.removeEventListener("keydown", handleKey);
     }, []);
 
+    // salvar edição de produto e matéria-prima
+    const salvarEdicao = async () => {
+        try {
+            if (itemTipo === "produto") {
+                // Prepara matérias para envio
+                const materiasParaEnviar = itemSelecionado.materias.map((m) => ({
+                    id_materia: m.id_materia,
+                    quantidade: m.quantidade,
+                }));
+
+                const response = await api.put(`/produto/editar/${itemSelecionado.id_produto}`, {
+                    nome: itemSelecionado.nome,
+                    materias: materiasParaEnviar,
+                });
+
+                // Atualiza produto localmente
+                setProdutos(
+                    produtos.map((p) =>
+                        p.id_produto === itemSelecionado.id_produto
+                            ? response.data.produto
+                            : p
+                    )
+                );
+
+                alert("Produto atualizado com sucesso!");
+            } else if (itemTipo === "materia") {
+                // Exemplo de envio de atualização de matéria-prima
+                const payload = {
+                    nome: itemSelecionado.nome,
+                    unidade_medida: itemSelecionado.unidade_medida,
+                    qtd_embalagem: itemSelecionado.qtd_embalagem,
+                    preco_atual: itemSelecionado.preco_atual,
+                    fornecedor_cnpj: itemSelecionado.fornecedor_cnpj,
+                    fornecedor_nome: itemSelecionado.fornecedor_nome,
+                    quantidade: itemSelecionado.quantidade,
+                };
+
+                await api.put(`/materia/editar/${itemSelecionado.id_materia}`, payload);
+
+                // Atualiza localmente
+                setMaterias(
+                    materias.map((m) =>
+                        m.id_materia === itemSelecionado.id_materia
+                            ? { ...m, ...payload }
+                            : m
+                    )
+                );
+
+                alert("Matéria-prima atualizada com sucesso!");
+            }
+
+            setEditando(false);
+            fecharModal();
+        } catch (error) {
+            console.error("Erro ao atualizar:", error);
+            alert("Erro ao atualizar item!");
+        }
+    };
+
+    // Função para deletar
+    const deletarItem = async () => {
+        try {
+            if (!itemParaExcluir) return;
+
+            if (itemTipo === "produto") {
+                await api.delete(`/produto/deletar/${itemParaExcluir.id_produto}`);
+                setProdutos(produtos.filter((p) => p.id_produto !== itemParaExcluir.id_produto));
+            } else if (itemTipo === "materia") {
+                await api.delete(`/materia/deletar/${itemParaExcluir.id_materia}`);
+                setMaterias(materias.filter((m) => m.id_materia !== itemParaExcluir.id_materia));
+            }
+
+            setItemParaExcluir(null);
+            setItemSelecionado(null);
+            setProdutosImpactados(0);
+            setModalExcluirAberto(false);
+        } catch (error) {
+            console.error("Erro ao deletar:", error);
+            alert(error.message || "Erro desconhecido");
+        }
+    };
+
+    // calcular subtotal e total para modal de edição de produto
+    const calcularSubtotal = (materia, quantidade) => {
+        if (!materia || !quantidade) return 0;
+        let quantidadeReal = quantidade;
+        if (materia.unidade_medida.toUpperCase() === "LATA" && materia.qtd_embalagem)
+            quantidadeReal = quantidade / materia.qtd_embalagem;
+        if (materia.unidade_medida.toUpperCase() === "ROLO" && materia.qtd_embalagem)
+            quantidadeReal = quantidade / materia.qtd_embalagem;
+        return (quantidadeReal * materia.preco_atual).toFixed(2);
+    };
+
+    const calcularTotal = () => {
+        if (!itemSelecionado?.materias) return 0;
+        return itemSelecionado.materias.reduce((acc, m) => {
+            const mat = materiasDisponiveis.find((mat) => mat.id_materia === m.id_materia);
+            return acc + Number(calcularSubtotal(mat, m.quantidade));
+        }, 0).toFixed(2);
+    };
+
     return (
         <div className="dashboard-wrapper">
             <main className="main-contentdash">
                 <header className="main-header">
-                    <h1>Bem-vindo ao <span className="logo">FiscalCalc</span></h1>
+                    <h1>
+                        Bem-vindo ao <span className="logo">FiscalCalc</span>
+                    </h1>
                     <p>Dashboard de Custos e Estoque</p>
                 </header>
 
@@ -141,10 +248,21 @@ const Dashboard = () => {
 
                 {/* BOTÕES */}
                 <div className="actions">
-                    <button onClick={() => { setMostrarProdutos(!mostrarProdutos); setMostrarMaterias(false); }}>
+                    <button
+                        onClick={() => {
+                            setMostrarProdutos(true);
+                            setMostrarMaterias(false);
+                        }}
+                    >
                         Produtos Cadastrados
                     </button>
-                    <button onClick={() => { setMostrarMaterias(!mostrarMaterias); setMostrarProdutos(false); }}>
+                    <button
+                        onClick={() => {
+                            setMostrarMaterias(true);
+                            setMostrarProdutos(false);
+                            fetchMaterias();
+                        }}
+                    >
                         Matérias Cadastradas
                     </button>
                 </div>
@@ -155,19 +273,47 @@ const Dashboard = () => {
                         <table className="produtos-table">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Nome</th>
-                                    <th>Código</th>
-                                    <th>Preço (R$)</th>
-                                    <th>Estoque</th>
+                                    <th>Custo Total (R$)</th>
+                                    <th>Criador</th>
+                                    <th>Data Atualização</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {produtos.map((p) => (
-                                    <tr key={p.id} onClick={() => abrirModal(p, "produto")} className="linha-click">
+                                    <tr
+                                        key={p.id_produto}
+                                        onClick={() => abrirModal(p, "produto")}
+                                        className="linha-click"
+                                    >
+                                        <td>{p.id_produto}</td>
                                         <td>{p.nome}</td>
-                                        <td>{p.codigo}</td>
-                                        <td>{p.preco.toFixed(2)}</td>
-                                        <td>{p.estoque}</td>
+                                        <td>{p.custo_total}</td>
+                                        <td>{p.criador}</td>
+                                        <td>{p.data_atualizacao}</td>
+                                        <td className="acoes-cell">
+                                            <button
+                                                className="btn-acao editar"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    abrirModal(p, "produto", true);
+                                                }}
+                                            >
+                                                <img src={editar} alt="Editar" />
+                                            </button>
+                                            <button
+                                                className="btn-acao deletar"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    abrirModalExcluir(p, "produto");
+                                                }}
+                                            >
+                                                <img src={trash} alt="Deletar" />
+                                            </button>
+
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -181,21 +327,47 @@ const Dashboard = () => {
                         <table className="produtos-table">
                             <thead>
                                 <tr>
+                                    <th>ID</th>
                                     <th>Matéria</th>
-                                    <th>Código</th>
-                                    <th>Valor Custo (R$)</th>
+                                    <th>Preço Atual (R$)</th>
                                     <th>Fornecedor</th>
-                                    <th>Data de compra</th>
+                                    <th>Data Atualização</th>
+                                    <th>Ações</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {materias.map((m, index) => (
-                                    <tr key={index} onClick={() => abrirModal(m, "materia")} className="linha-click">
-                                        <td>{m.materia}</td>
-                                        <td>{m.codigo}</td>
-                                        <td>{m.custo.toFixed(2)}</td>
+                                    <tr
+                                        key={m.id_materia}
+                                        onClick={() => abrirModal(m, "materia")}
+                                        className="linha-click"
+                                    >
+                                        <td>{m.id_materia}</td>
+                                        <td>{m.nome}</td>
+                                        <td>{m.preco_atual}</td>
                                         <td>{m.fornecedor}</td>
-                                        <td>{m.data}</td>
+                                        <td>{m.data_atualizacao}</td>
+                                        <td className="acoes-cell">
+                                            <button
+                                                className="btn-acao editar"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    abrirModal(m, "materia", true);
+                                                }}
+                                            >
+                                                <img src={editar} alt="Editar" />
+                                            </button>
+                                            <button
+                                                className="btn-acao deletar"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    abrirModalExcluir(m, "materia")
+                                                }}
+                                            >
+                                                <img src={trash} alt="Deletar" />
+                                            </button>
+
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -206,49 +378,190 @@ const Dashboard = () => {
                 {/* MODAL */}
                 {itemSelecionado && (
                     <div className="modal-overlay" onClick={fecharModal}>
-                        <img
-                            src={editar}
-                            alt="editar"
-                            className="editar-img"
-                            onClick={(e) => { e.stopPropagation(); setEditando(true); }}
-                        />
-                        <img
-                            src={trash}
-                            alt="deletar"
-                            className="deletar-img"
-                            onClick={(e) => { e.stopPropagation(); deletarItem(); }}
-                        />
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                            <h3>Detalhes</h3>
+                            <h3>Detalhes do {itemTipo}</h3>
 
-                            {editando ? (
+                            {itemTipo === "produto" ? (
                                 <div className="modal-body">
-                                    {Object.keys(itemSelecionado).map((key) => (
-                                        <div key={key}>
-                                            <label>{key}:</label>
+                                    {/* Campos não editáveis */}
+                                    <p><strong>ID:</strong> {itemSelecionado.id_produto}</p>
+                                    <p><strong>Custo Total:</strong> R$ {itemSelecionado.custo_total.toFixed(2)}</p>
+                                    <p><strong>Data Atualização:</strong> {itemSelecionado.data_atualizacao}</p>
+                                    <p><strong>Criador:</strong> {itemSelecionado.criador}</p>
+
+                                    {/* Nome editável */}
+                                    {editando ? (
+                                        <div>
+                                            <label>Nome:</label>
                                             <input
                                                 type="text"
-                                                value={itemSelecionado[key]}
+                                                value={itemSelecionado.nome}
                                                 onChange={(e) =>
-                                                    setItemSelecionado({
-                                                        ...itemSelecionado,
-                                                        [key]: e.target.value
-                                                    })
+                                                    setItemSelecionado({ ...itemSelecionado, nome: e.target.value })
                                                 }
                                             />
                                         </div>
-                                    ))}
-                                    <button onClick={salvarEdicao}>Salvar</button>
+                                    ) : (
+                                        <p><strong>Nome:</strong> {itemSelecionado.nome}</p>
+                                    )}
+
+                                    <h4>Matérias</h4>
+
+                                    {itemSelecionado.materias?.length > 0 ? (
+                                        <table className="materias-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Matéria</th>
+                                                    <th>Quantidade</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {itemSelecionado.materias.map((mat, index) => {
+                                                    const materiaBanco = materiasDisponiveis.find(
+                                                        (m) => m.id_materia === mat.id_materia
+                                                    );
+
+                                                    return (
+                                                        <tr key={mat.id_materia}>
+                                                            <td>
+                                                                {editando ? (
+                                                                    <select
+                                                                        value={mat.id_materia}
+                                                                        onChange={(e) => {
+                                                                            const novasMaterias = [...itemSelecionado.materias];
+                                                                            novasMaterias[index].id_materia = Number(e.target.value);
+                                                                            setItemSelecionado({
+                                                                                ...itemSelecionado,
+                                                                                materias: novasMaterias,
+                                                                            });
+                                                                        }}
+                                                                    >
+                                                                        <option value="">Selecione</option>
+                                                                        {materiasDisponiveis.map((m) => (
+                                                                            <option key={m.id_materia} value={m.id_materia}>
+                                                                                {m.nome}
+                                                                            </option>
+                                                                        ))}
+                                                                    </select>
+                                                                ) : (
+                                                                    materiaBanco?.nome || "N/A"
+                                                                )}
+                                                            </td>
+
+                                                            <td>
+                                                                {editando ? (
+                                                                    <input
+                                                                        type="number"
+                                                                        step="0.001"
+                                                                        value={mat.quantidade || ""}
+                                                                        onChange={(e) => {
+                                                                            const novasMaterias = [...itemSelecionado.materias];
+                                                                            novasMaterias[index].quantidade = e.target.value === "" ? "" : Number(e.target.value);
+                                                                            setItemSelecionado({
+                                                                                ...itemSelecionado,
+                                                                                materias: novasMaterias,
+                                                                            });
+                                                                        }}
+                                                                    />
+                                                                ) : (
+                                                                    mat.quantidade
+                                                                )}
+                                                            </td>
+
+                                                            <td>
+                                                                R${" "}
+                                                                {calcularSubtotal(
+                                                                    materiasDisponiveis.find((m) => m.id_materia === mat.id_materia),
+                                                                    mat.quantidade
+                                                                )}
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                            </tbody>
+                                        </table>
+                                    ) : (
+                                        <p>Nenhuma matéria vinculada.</p>
+                                    )}
+
+                                    {editando && (
+                                        <div className="total-produto-modal">
+                                            <strong>Total: R$ {calcularTotal()}</strong>
+                                        </div>
+                                    )}
+
+                                    <div className="modal-actions">
+                                        {editando && <button onClick={salvarEdicao}>Salvar</button>}
+                                        <button className="close-btn" onClick={fecharModal}>Fechar</button>
+                                    </div>
                                 </div>
                             ) : (
+                                // Modal para matéria-prima
                                 <div className="modal-body">
-                                    {Object.entries(itemSelecionado).map(([key, value], i) => (
-                                        <p key={i}><strong>{key}:</strong> {Array.isArray(value) ? value.join(", ") : value}</p>
-                                    ))}
+                                    {editando ? (
+                                        <div>
+                                            {/* Exibir ID e Data sem permitir edição */}
+                                            <p><strong>ID:</strong> {itemSelecionado.id_materia}</p>
+                                            <p><strong>Data Atualização:</strong> {itemSelecionado.data_atualizacao}</p>
+
+                                            {/* Campos editáveis */}
+                                            {Object.entries(itemSelecionado)
+                                                .filter(([key]) => key !== "id_materia" && key !== "data_atualizacao" && key !== "fornecedor_cnpj")
+                                                .map(([key, value]) => (
+                                                    <div key={key}>
+                                                        <label>{key}:</label>
+                                                        <input
+                                                            type={typeof value === "number" ? "number" : "text"}
+                                                            value={value || ""}
+                                                            onChange={(e) =>
+                                                                setItemSelecionado({
+                                                                    ...itemSelecionado,
+                                                                    [key]: e.target.value,
+                                                                })
+                                                            }
+                                                        />
+                                                    </div>
+                                                ))}
+                                            <button onClick={salvarEdicao}>Salvar</button>
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <p><strong>ID:</strong> {itemSelecionado.id_materia}</p>
+                                            <p><strong>Data Atualização:</strong> {itemSelecionado.data_atualizacao}</p>
+
+                                            {Object.entries(itemSelecionado)
+                                                .filter(([key]) => key !== "id_materia" && key !== "data_atualizacao")
+                                                .map(([key, value], i) => (
+                                                    <p key={i}><strong>{key}:</strong> {value}</p>
+                                                ))}
+                                        </div>
+                                    )}
+                                    <button className="close-btn" onClick={fecharModal}>Fechar</button>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                )}
 
-                            <button className="close-btn" onClick={fecharModal}>Fechar</button>
+                {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
+                {modalExcluirAberto && (
+                    <div className="modal-overlay" onClick={fecharModalExcluir}>
+                        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                            <h3>Confirmar Exclusão</h3>
+                            <p>
+                                {produtosImpactados > 0
+                                    ? `Atenção! ${produtosImpactados} produto(s) usam essa matéria-prima. Deletar pode afetar essas relações.`
+                                    : "Tem certeza que deseja excluir esse registro?"}
+                            </p>
+                            <div className="modal-actions">
+                                <button className="btn-excluir" onClick={deletarItem}>
+                                    Excluir
+                                </button>
+                                <button className="btn-voltar" onClick={fecharModalExcluir}>
+                                    Voltar
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}

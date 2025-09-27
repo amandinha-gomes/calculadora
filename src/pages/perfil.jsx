@@ -22,7 +22,7 @@ const Perfil = () => {
     };
 
     return (
-        <div>
+        <div className="perfil-page">
             <div className="perfil-section">
                 <h2>Perfil</h2>
                 <form className="section-perfil">
