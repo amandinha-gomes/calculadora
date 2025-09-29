@@ -1,11 +1,35 @@
 import React, { useState, useEffect } from "react";
+import { Line } from "react-chartjs-2";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+} from "chart.js";
 import api from "../services/api";
 import "../css/dashboard.css";
 import grafico from "../img/grafico.svg";
 import editar from "../img/editar.svg";
 import trash from "../img/trash.svg";
 
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend
+);
+
 const Dashboard = () => {
+    const [dashboardData, setDashboardData] = useState(null);
+    const [produtoFiltrado, setProdutoFiltrado] = useState(null);
+
     const [mostrarProdutos, setMostrarProdutos] = useState(true);
     const [mostrarMaterias, setMostrarMaterias] = useState(false);
 
@@ -20,7 +44,6 @@ const Dashboard = () => {
     const [editando, setEditando] = useState(false);
 
     const [modalExcluirAberto, setModalExcluirAberto] = useState(false);
-
 
     const [produtosImpactados, setProdutosImpactados] = useState(0);
     const [itemTipo, setItemTipo] = useState(""); // "produto" ou "materia"
@@ -48,9 +71,58 @@ const Dashboard = () => {
             }
         };
 
+        const fetchDashboard = async () => {
+            try {
+                const response = await api.get("/produto/dashboard");
+                setDashboardData(response.data);
+            } catch (error) {
+                console.error("Erro ao buscar dados do dashboard:", error);
+            }
+        };
+
         fetchProdutos();
         fetchMateriasDisponiveis();
+        fetchDashboard();
     }, []);
+
+    // Dados do gráfico
+    const graficoProdutos = (historicoProdutos, produtoFiltrado) => {
+        if (!historicoProdutos) return null;
+
+        const meses = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+
+        // Coletar todos os meses existentes no histórico
+        const mesesExistentes = new Set();
+        Object.values(historicoProdutos).forEach(produto => {
+            produto.dados.forEach(d => mesesExistentes.add(d.mes));
+        });
+
+        // Ordenar e converter para nomes
+        const labels = Array.from(mesesExistentes).sort((a, b) => a - b).map(m => meses[m - 1]);
+
+        // Obter produtos para plotar
+        const produtosParaPlotar = produtoFiltrado
+            ? [historicoProdutos[produtoFiltrado]]
+            : Object.values(historicoProdutos);
+
+        const datasets = produtosParaPlotar.map(produto => {
+            // Mapear valores de cada mês
+            const data = Array.from(mesesExistentes).sort((a, b) => a - b).map(mes => {
+                const registro = produto.dados.find(d => d.mes === mes);
+                return registro ? registro.valor : null; // null para mês sem valor
+            });
+
+            return {
+                label: produto.nome,
+                data,
+                borderColor: `hsl(${Math.random() * 360}, 70%, 50%)`,
+                backgroundColor: "rgba(75,192,192,0.2)",
+                tension: 0.4
+            };
+        });
+
+        return { labels, datasets };
+    };
 
     // Buscar matérias-primas quando o usuário clicar no botão
     const fetchMaterias = async () => {
@@ -82,7 +154,9 @@ const Dashboard = () => {
 
         if (tipo === "materia") {
             try {
-                const response = await api.get(`/materia/produtos-impactados/${item.id_materia}`);
+                const response = await api.get(
+                    `/materia/produtos-impactados/${item.id_materia}`
+                );
                 setProdutosImpactados(response.data.produtosImpactados || 0);
             } catch (error) {
                 console.error("Erro ao buscar produtos impactados:", error);
@@ -114,10 +188,13 @@ const Dashboard = () => {
                     quantidade: m.quantidade,
                 }));
 
-                const response = await api.put(`/produto/editar/${itemSelecionado.id_produto}`, {
-                    nome: itemSelecionado.nome,
-                    materias: materiasParaEnviar,
-                });
+                const response = await api.put(
+                    `/produto/editar/${itemSelecionado.id_produto}`,
+                    {
+                        nome: itemSelecionado.nome,
+                        materias: materiasParaEnviar,
+                    }
+                );
 
                 // Atualiza produto localmente
                 setProdutos(
@@ -170,10 +247,14 @@ const Dashboard = () => {
 
             if (itemTipo === "produto") {
                 await api.delete(`/produto/deletar/${itemParaExcluir.id_produto}`);
-                setProdutos(produtos.filter((p) => p.id_produto !== itemParaExcluir.id_produto));
+                setProdutos(
+                    produtos.filter((p) => p.id_produto !== itemParaExcluir.id_produto)
+                );
             } else if (itemTipo === "materia") {
                 await api.delete(`/materia/deletar/${itemParaExcluir.id_materia}`);
-                setMaterias(materias.filter((m) => m.id_materia !== itemParaExcluir.id_materia));
+                setMaterias(
+                    materias.filter((m) => m.id_materia !== itemParaExcluir.id_materia)
+                );
             }
 
             setItemParaExcluir(null);
@@ -190,19 +271,29 @@ const Dashboard = () => {
     const calcularSubtotal = (materia, quantidade) => {
         if (!materia || !quantidade) return 0;
         let quantidadeReal = quantidade;
-        if (materia.unidade_medida.toUpperCase() === "LATA" && materia.qtd_embalagem)
+        if (
+            materia.unidade_medida.toUpperCase() === "LATA" &&
+            materia.qtd_embalagem
+        )
             quantidadeReal = quantidade / materia.qtd_embalagem;
-        if (materia.unidade_medida.toUpperCase() === "ROLO" && materia.qtd_embalagem)
+        if (
+            materia.unidade_medida.toUpperCase() === "ROLO" &&
+            materia.qtd_embalagem
+        )
             quantidadeReal = quantidade / materia.qtd_embalagem;
         return (quantidadeReal * materia.preco_atual).toFixed(2);
     };
 
     const calcularTotal = () => {
         if (!itemSelecionado?.materias) return 0;
-        return itemSelecionado.materias.reduce((acc, m) => {
-            const mat = materiasDisponiveis.find((mat) => mat.id_materia === m.id_materia);
-            return acc + Number(calcularSubtotal(mat, m.quantidade));
-        }, 0).toFixed(2);
+        return itemSelecionado.materias
+            .reduce((acc, m) => {
+                const mat = materiasDisponiveis.find(
+                    (mat) => mat.id_materia === m.id_materia
+                );
+                return acc + Number(calcularSubtotal(mat, m.quantidade));
+            }, 0)
+            .toFixed(2);
     };
 
     return (
@@ -217,32 +308,88 @@ const Dashboard = () => {
 
                 {/* GRÁFICO */}
                 <section className="chart-section">
-                    <img src={grafico} alt="Evolução de Custos" className="chart-img" />
+                    {/* <img src={grafico} alt="Evolução de Custos" className="chart-img" /> */}
+                    {dashboardData && (
+                        <Line
+                            data={graficoProdutos(
+                                dashboardData.historico_produtos,
+                                produtoFiltrado
+                            )}
+                            options={{
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: "right", align: "start", padding: {
+                                            top: 50
+                                        }, labels: {
+                                            font: {
+                                                size: 14,   // 👈 fonte da legenda
+                                                weight: "bold"
+                                            }
+                                        }
+                                    },
+                                    title: {
+                                        display: true, text: "Evolução de Custo dos Produtos", align: "start", padding: {
+                                            top: 10,
+                                            bottom: 20
+                                        }, font: {
+                                            size: 16,
+                                            weight: "bold",
+
+                                        }
+                                    },
+                                },
+                                scales: {
+                                    y: {
+                                        title: {
+                                            display: true, text: "Custo Total (R$)", font: {
+                                                size: 14
+                                            }
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true, text: "Mês", font: {
+                                                size: 14
+                                            }
+                                        }
+                                    },
+                                },
+                            }}
+                        />
+                    )}
                 </section>
 
                 {/* CARDS */}
                 <section className="cards1">
                     <div className="card">
                         <h2>Cadastrados</h2>
-                        <p className="valor">7</p>
+                        <p className="valor">{dashboardData?.total_produtos}</p>
                     </div>
 
                     <div className="card">
                         <h2>Custo Total</h2>
-                        <p className="valor">R$ 10.500,00</p>
+                        <p className="valor">
+                            R$ {dashboardData?.custo_total?.toFixed(2) || "0.00"}
+                        </p>
                         <small>Uma unidade por produto</small>
                     </div>
 
                     <div className="card2">
                         <h2>Menor Custo</h2>
-                        <p className="valor2">MCM010</p>
-                        <small>R$ 55,00</small>
+                        <p className="valor2">{dashboardData?.mais_barato?.nome || "-"}</p>
+                        <small>
+                            R$ {dashboardData?.mais_barato?.custo_total?.toFixed(2) || "0.00"}
+                        </small>
                     </div>
 
                     <div className="card2">
                         <h2>Maior Custo</h2>
-                        <p className="valor2">MCM037</p>
-                        <small>R$ 110,00</small>
+                        <p className="valor2">{dashboardData?.mais_caro?.nome || "-"}</p>
+                        <small>
+                            R$ {dashboardData?.mais_caro?.custo_total?.toFixed(2) || "0.00"}
+                        </small>
                     </div>
                 </section>
 
@@ -312,7 +459,6 @@ const Dashboard = () => {
                                             >
                                                 <img src={trash} alt="Deletar" />
                                             </button>
-
                                         </td>
                                     </tr>
                                 ))}
@@ -361,12 +507,11 @@ const Dashboard = () => {
                                                 className="btn-acao deletar"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    abrirModalExcluir(m, "materia")
+                                                    abrirModalExcluir(m, "materia");
                                                 }}
                                             >
                                                 <img src={trash} alt="Deletar" />
                                             </button>
-
                                         </td>
                                     </tr>
                                 ))}
@@ -384,10 +529,20 @@ const Dashboard = () => {
                             {itemTipo === "produto" ? (
                                 <div className="modal-body">
                                     {/* Campos não editáveis */}
-                                    <p><strong>ID:</strong> {itemSelecionado.id_produto}</p>
-                                    <p><strong>Custo Total:</strong> R$ {itemSelecionado.custo_total.toFixed(2)}</p>
-                                    <p><strong>Data Atualização:</strong> {itemSelecionado.data_atualizacao}</p>
-                                    <p><strong>Criador:</strong> {itemSelecionado.criador}</p>
+                                    <p>
+                                        <strong>ID:</strong> {itemSelecionado.id_produto}
+                                    </p>
+                                    <p>
+                                        <strong>Custo Total:</strong> R${" "}
+                                        {itemSelecionado.custo_total.toFixed(2)}
+                                    </p>
+                                    <p>
+                                        <strong>Data Atualização:</strong>{" "}
+                                        {itemSelecionado.data_atualizacao}
+                                    </p>
+                                    <p>
+                                        <strong>Criador:</strong> {itemSelecionado.criador}
+                                    </p>
 
                                     {/* Nome editável */}
                                     {editando ? (
@@ -397,12 +552,17 @@ const Dashboard = () => {
                                                 type="text"
                                                 value={itemSelecionado.nome}
                                                 onChange={(e) =>
-                                                    setItemSelecionado({ ...itemSelecionado, nome: e.target.value })
+                                                    setItemSelecionado({
+                                                        ...itemSelecionado,
+                                                        nome: e.target.value,
+                                                    })
                                                 }
                                             />
                                         </div>
                                     ) : (
-                                        <p><strong>Nome:</strong> {itemSelecionado.nome}</p>
+                                        <p>
+                                            <strong>Nome:</strong> {itemSelecionado.nome}
+                                        </p>
                                     )}
 
                                     <h4>Matérias</h4>
@@ -429,8 +589,12 @@ const Dashboard = () => {
                                                                     <select
                                                                         value={mat.id_materia}
                                                                         onChange={(e) => {
-                                                                            const novasMaterias = [...itemSelecionado.materias];
-                                                                            novasMaterias[index].id_materia = Number(e.target.value);
+                                                                            const novasMaterias = [
+                                                                                ...itemSelecionado.materias,
+                                                                            ];
+                                                                            novasMaterias[index].id_materia = Number(
+                                                                                e.target.value
+                                                                            );
                                                                             setItemSelecionado({
                                                                                 ...itemSelecionado,
                                                                                 materias: novasMaterias,
@@ -439,7 +603,10 @@ const Dashboard = () => {
                                                                     >
                                                                         <option value="">Selecione</option>
                                                                         {materiasDisponiveis.map((m) => (
-                                                                            <option key={m.id_materia} value={m.id_materia}>
+                                                                            <option
+                                                                                key={m.id_materia}
+                                                                                value={m.id_materia}
+                                                                            >
                                                                                 {m.nome}
                                                                             </option>
                                                                         ))}
@@ -456,8 +623,13 @@ const Dashboard = () => {
                                                                         step="0.001"
                                                                         value={mat.quantidade || ""}
                                                                         onChange={(e) => {
-                                                                            const novasMaterias = [...itemSelecionado.materias];
-                                                                            novasMaterias[index].quantidade = e.target.value === "" ? "" : Number(e.target.value);
+                                                                            const novasMaterias = [
+                                                                                ...itemSelecionado.materias,
+                                                                            ];
+                                                                            novasMaterias[index].quantidade =
+                                                                                e.target.value === ""
+                                                                                    ? ""
+                                                                                    : Number(e.target.value);
                                                                             setItemSelecionado({
                                                                                 ...itemSelecionado,
                                                                                 materias: novasMaterias,
@@ -472,7 +644,9 @@ const Dashboard = () => {
                                                             <td>
                                                                 R${" "}
                                                                 {calcularSubtotal(
-                                                                    materiasDisponiveis.find((m) => m.id_materia === mat.id_materia),
+                                                                    materiasDisponiveis.find(
+                                                                        (m) => m.id_materia === mat.id_materia
+                                                                    ),
                                                                     mat.quantidade
                                                                 )}
                                                             </td>
@@ -493,7 +667,9 @@ const Dashboard = () => {
 
                                     <div className="modal-actions">
                                         {editando && <button onClick={salvarEdicao}>Salvar</button>}
-                                        <button className="close-btn" onClick={fecharModal}>Fechar</button>
+                                        <button className="close-btn" onClick={fecharModal}>
+                                            Fechar
+                                        </button>
                                     </div>
                                 </div>
                             ) : (
@@ -502,17 +678,29 @@ const Dashboard = () => {
                                     {editando ? (
                                         <div>
                                             {/* Exibir ID e Data sem permitir edição */}
-                                            <p><strong>ID:</strong> {itemSelecionado.id_materia}</p>
-                                            <p><strong>Data Atualização:</strong> {itemSelecionado.data_atualizacao}</p>
+                                            <p>
+                                                <strong>ID:</strong> {itemSelecionado.id_materia}
+                                            </p>
+                                            <p>
+                                                <strong>Data Atualização:</strong>{" "}
+                                                {itemSelecionado.data_atualizacao}
+                                            </p>
 
                                             {/* Campos editáveis */}
                                             {Object.entries(itemSelecionado)
-                                                .filter(([key]) => key !== "id_materia" && key !== "data_atualizacao" && key !== "fornecedor_cnpj")
+                                                .filter(
+                                                    ([key]) =>
+                                                        key !== "id_materia" &&
+                                                        key !== "data_atualizacao" &&
+                                                        key !== "fornecedor_cnpj"
+                                                )
                                                 .map(([key, value]) => (
                                                     <div key={key}>
                                                         <label>{key}:</label>
                                                         <input
-                                                            type={typeof value === "number" ? "number" : "text"}
+                                                            type={
+                                                                typeof value === "number" ? "number" : "text"
+                                                            }
                                                             value={value || ""}
                                                             onChange={(e) =>
                                                                 setItemSelecionado({
@@ -527,17 +715,29 @@ const Dashboard = () => {
                                         </div>
                                     ) : (
                                         <div>
-                                            <p><strong>ID:</strong> {itemSelecionado.id_materia}</p>
-                                            <p><strong>Data Atualização:</strong> {itemSelecionado.data_atualizacao}</p>
+                                            <p>
+                                                <strong>ID:</strong> {itemSelecionado.id_materia}
+                                            </p>
+                                            <p>
+                                                <strong>Data Atualização:</strong>{" "}
+                                                {itemSelecionado.data_atualizacao}
+                                            </p>
 
                                             {Object.entries(itemSelecionado)
-                                                .filter(([key]) => key !== "id_materia" && key !== "data_atualizacao")
+                                                .filter(
+                                                    ([key]) =>
+                                                        key !== "id_materia" && key !== "data_atualizacao"
+                                                )
                                                 .map(([key, value], i) => (
-                                                    <p key={i}><strong>{key}:</strong> {value}</p>
+                                                    <p key={i}>
+                                                        <strong>{key}:</strong> {value}
+                                                    </p>
                                                 ))}
                                         </div>
                                     )}
-                                    <button className="close-btn" onClick={fecharModal}>Fechar</button>
+                                    <button className="close-btn" onClick={fecharModal}>
+                                        Fechar
+                                    </button>
                                 </div>
                             )}
                         </div>

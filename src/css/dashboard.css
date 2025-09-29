@@ -41,10 +41,11 @@ body {
 /* GRÁFICO */
 .chart-section {
     margin-left: 20vh;
-    width: 60vh;
+    width: 40vw;
+    height: 38vh;
     margin-top: -20px;
     background: white;
-    padding: 20px;
+    padding: 25px;
     display: flex;
     justify-content: center;
 }
