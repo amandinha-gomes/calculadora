@@ -420,12 +420,12 @@ const Dashboard = () => {
                         <table className="produtos-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th id="id-produtos-table">ID</th>
                                     <th>Nome</th>
                                     <th>Custo Total (R$)</th>
                                     <th>Criador</th>
                                     <th>Data Atualização</th>
-                                    <th>Ações</th>
+                                    <th id="id1-produtos-table">Ações</th>
                                 </tr>
                             </thead>
                             <tbody>

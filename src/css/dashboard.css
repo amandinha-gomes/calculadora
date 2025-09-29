@@ -177,6 +177,16 @@ body {
     cursor: pointer;
 }
 
+#id-produtos-table {
+    border-bottom-left-radius: 0.5vw;
+    border-top-left-radius: 0.5vw;
+}
+
+#id1-produtos-table {
+    border-top-right-radius: 0.5vw;
+    border-bottom-right-radius: 0.5vw;
+}
+
 .produtos-table th,
 .produtos-table td {
     padding: 12px 15px;
@@ -188,7 +198,6 @@ body {
 .produtos-table th {
     background-color: #b91010;
     color: white;
-    border-radius: 10px;
     gap: 10px;
     margin-right: 10px;
     text-align: center;
@@ -202,7 +211,8 @@ body {
 .modal-body {
     display: flex;
     flex-direction: column;
-    gap: 0.00   1vw; /* espaço entre os campos */
+    gap: 0.00 1vw;
+    /* espaço entre os campos */
 }
 
 .modal-body label {
@@ -246,12 +256,12 @@ body {
     background: #a00d0d;
 }
 
-.editar-img{
+.editar-img {
     margin-top: -5vw;
     z-index: 1;
 }
 
-.deletar-img{
+.deletar-img {
     margin-top: -5vw;
     z-index: 1;
 }
@@ -287,7 +297,8 @@ body {
 /* Formulário em grid */
 .modal-body form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* responsivo */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    /* responsivo */
     gap: 18px 24px;
 }
 
@@ -314,19 +325,20 @@ body {
 }
 
 .modal-body table {
-  width: 100%;
-  border-collapse: collapse;
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .modal-body th,
 .modal-body td {
-  text-align: left; /* <-- garante alinhamento à esquerda */
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
+    text-align: left;
+    /* <-- garante alinhamento à esquerda */
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
 }
 
 .modal-body th {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .modal-body input:focus,
@@ -355,26 +367,26 @@ body {
 }
 
 .acoes-cell {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .btn-acao {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
 }
 
 .btn-acao img {
-  width: 26px;
-  height: 26px;
-  object-fit: contain;
-  transition: transform 0.2s ease;
+    width: 26px;
+    height: 26px;
+    object-fit: contain;
+    transition: transform 0.2s ease;
 }
 
 .btn-acao:hover img {
-  transform: scale(1.1);
+    transform: scale(1.1);
 }
 
 

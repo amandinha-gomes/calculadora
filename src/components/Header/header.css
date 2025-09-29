@@ -6,17 +6,14 @@
 
 .header-container > svg {
   position: fixed;
-  color: black;
-  width: 30px;
-  height: 30px;
-  margin-top: 32px;
-  margin-left: 32px;
+  color: #B91010 !important;
+  width: 2vw;   /* 30px ≈ 2vw em telas de 1500px de largura */
+  height: 2vw;  /* 30px ≈ 2vw */
+  margin-top: 2.1vw;  /* 32px ≈ 2.1vw */
+  margin-left: 2.1vw; /* 32px ≈ 2.1vw */
   cursor: pointer;
 }
 
 .red-header {
   background-color: red; /* cor para cadastrar usuário */
 }
-
-
-

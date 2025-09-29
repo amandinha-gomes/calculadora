@@ -6,7 +6,7 @@ import CadastroMateria from "./pages/cadastromateria";
 import CadastroUser from "./pages/cadastrouser";
 import Login from "./pages/login";
 import Header from "./components/Header";
-import PrivateRoute from "./components/PrivateRoute";
+// import PrivateRoute from "./components/PrivateRoute";
 
 const Router = () => {
   return (
@@ -15,46 +15,56 @@ const Router = () => {
         <Route
           path="/dashboard"
           element={
-            <PrivateRoute>
-              <Header />
-              <Dashboard />
-            </PrivateRoute>
+            // <PrivateRoute>
+              <>
+                <Header />
+                <Dashboard />
+              </>
+            // </PrivateRoute>
           }
         />
         <Route
           path="/perfil"
           element={
-            <PrivateRoute>
-              <Header />
-              <Perfil />
-            </PrivateRoute>
+            // <PrivateRoute>
+              <>
+                <Header />
+                <Perfil />
+              </>
+            // </PrivateRoute>
           }
         />
         <Route
           path="/cadastroproduto"
           element={
-            <PrivateRoute>
-              <Header />
-              <CadastroProduto />
-            </PrivateRoute>
+            // <PrivateRoute>
+              <>
+                <Header />
+                <CadastroProduto />
+              </>
+            // </PrivateRoute>
           }
         />
         <Route
           path="/cadastromateria"
           element={
-            <PrivateRoute>
-              <Header />
-              <CadastroMateria />
-            </PrivateRoute>
+            // <PrivateRoute>
+              <>
+                <Header />
+                <CadastroMateria />
+              </>
+            // </PrivateRoute>
           }
         />
         <Route
           path="/cadastrouser"
           element={
-            <PrivateRoute>
-              <Header />
-              <CadastroUser />
-            </PrivateRoute>
+            // <PrivateRoute>
+              <>
+                <Header />
+                <CadastroUser />
+              </>
+            // </PrivateRoute>
           }
         />
         {/* Rota pública de login */}

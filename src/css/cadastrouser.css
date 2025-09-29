@@ -6,7 +6,7 @@
 
 /* coluna esquerda (fundo escuro com ícone) */
 .side-cadastro {
-    flex: 0 0 80%;
+    flex: 0 0 90%;
     background: #170203;
     display: flex;
     justify-content: center;
@@ -16,7 +16,7 @@
 
 .side-cadastro .perfil-img {
     width: 30%;
-    max-width: 220px;
+    max-width: 11.46vw; /* 220px */
     height: auto;
     object-fit: contain;
 }
@@ -24,33 +24,33 @@
 /* coluna direita (formulário) */
 .form-cadastro {
     flex: 1;
-    padding: 40px;
+    padding: 2.08vw; /* 40px */
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 20px;
+    gap: 1.04vw; /* 20px */
 }
 
 /* form interno */
 .form-cadastro form {
     display: flex;
     flex-direction: column;  
-    gap: 15px;               
+    gap: 0.78vw; /* 15px */              
     width: 100%;
-    max-width: 400px;
+    max-width: 20.83vw; /* 400px */
     margin-left: 7vw;
 }
 
 .row-cadastro {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 0.42vw; /* 8px */
 }
 
 .row-cadastro input {
-    padding: 12px;
-    border: 1px solid #d8d8d8;
-    border-radius: 8px;
+    padding: 0.62vw; /* 12px */
+    border: 0.05vw solid #d8d8d8;
+    border-radius: 0.42vw; /* 8px */
     width: 35vw;
 }
 
@@ -59,32 +59,31 @@
     background-color: #b91010;
     color: #fff;
     border: none;
-    padding: 12px;
-    border-radius: 8px;
+    padding: 0.62vw; /* 12px */
+    border-radius: 0.42vw; /* 8px */
     cursor: pointer;
-    font-size: 16px;
+    font-size: 0.83vw; /* 16px */
     width: 37vw;
 }
 
 input:focus{
-    border: 0.01px solid transparent;
+    border: 0.001vw solid transparent; /* 0.01px convertido */
     background-image: linear-gradient(#fff, #fff),
                       linear-gradient(120deg, #b91010, #ff4d4d, #b91010);
     background-origin: border-box;
     background-clip: padding-box, border-box;
-    box-shadow: 0 0 2px rgba(185, 16, 16, 0.7);
+    box-shadow: 0 0 0.1vw rgba(185, 16, 16, 0.7); /* 2px → 0.1vw */
     transition: all 0.2s ease-in-out;
 }
 
 @keyframes float {
-
     0%,
     100% {
         transform: translateY(0);
     }
 
     50% {
-        transform: translateY(-5px);
+        transform: translateY(-0.26vw); /* 5px */
     }
 }
 
@@ -92,7 +91,7 @@ input:focus{
     animation: float 2s ease-in-out infinite;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 46.88vw) { /* 900px */
     .cadastro-section {
         flex-direction: column;
         height: auto;
@@ -101,11 +100,11 @@ input:focus{
     .side-cadastro {
         flex: 0 0 auto;
         width: 100%;
-        padding: 40px 0;
-        min-height: 180px;
+        padding: 2.08vw 0; /* 40px 0 */
+        min-height: 9.38vw; /* 180px */
     }
 
     .form-cadastro {
-        padding: 30px 20px;
+        padding: 1.56vw 1.04vw; /* 30px 20px */
     }
 }
