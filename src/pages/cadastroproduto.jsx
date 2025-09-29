@@ -94,7 +94,6 @@ const CadastroProdutoContent = () => {
                 materias: materiasParaEnviar,
             });
 
-            alert(response.data.message);
             setCadastroFinalizado(true);
         } catch (error) {
             console.error("Erro ao cadastrar produto:", error);

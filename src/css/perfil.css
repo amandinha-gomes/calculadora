@@ -14,7 +14,11 @@
 
 .section-perfil {
     margin-top: 10vw;
-    margin-left: -4vw;
+    margin-left: -3.5vw;
+}
+
+.info {
+    margin-bottom: 3vw;
 }
 
 .row-perfil{
@@ -22,16 +26,6 @@
 }
 
 .row-perfil input{
-    width: 35vw;
-}
-
-.row2-perfil{
-    display: flex;
-    gap: 10px;
-    align-items: flex-end;
-}
-
-.row2-perfil input{
     width: 35vw;
 }
 

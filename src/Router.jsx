@@ -1,5 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/dashboard";
 import Perfil from "./pages/perfil";
 import CadastroProduto from "./pages/cadastroproduto";
@@ -12,12 +11,12 @@ import PrivateRoute from "./components/PrivateRoute";
 const Router = () => {
   return (
     <BrowserRouter>
-      <Header />
       <Routes>
         <Route
           path="/dashboard"
           element={
             <PrivateRoute>
+              <Header />
               <Dashboard />
             </PrivateRoute>
           }
@@ -26,6 +25,7 @@ const Router = () => {
           path="/perfil"
           element={
             <PrivateRoute>
+              <Header />
               <Perfil />
             </PrivateRoute>
           }
@@ -34,6 +34,7 @@ const Router = () => {
           path="/cadastroproduto"
           element={
             <PrivateRoute>
+              <Header />
               <CadastroProduto />
             </PrivateRoute>
           }
@@ -42,6 +43,7 @@ const Router = () => {
           path="/cadastromateria"
           element={
             <PrivateRoute>
+              <Header />
               <CadastroMateria />
             </PrivateRoute>
           }
@@ -50,11 +52,16 @@ const Router = () => {
           path="/cadastrouser"
           element={
             <PrivateRoute>
+              <Header />
               <CadastroUser />
             </PrivateRoute>
           }
         />
-        <Route path="*" element={<Login />} />
+        {/* Rota pública de login */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Rota coringa redirecionando para login */}
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
     </BrowserRouter>
   );
